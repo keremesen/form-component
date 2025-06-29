@@ -34,7 +34,7 @@ export const useCreateUserForm = () => {
         type: "text",
         label: "Full Name",
         placeholder: "Enter your full name",
-        autoComplate: "name",
+        autoComplete: "name",
         required: true,
         validation: {
           min: 2,
@@ -46,7 +46,7 @@ export const useCreateUserForm = () => {
         type: "email",
         label: "Email",
         placeholder: "Enter your email address",
-        autoComplate: "email",
+        autoComplete: "email",
         required: true,
       },
       {
@@ -54,7 +54,7 @@ export const useCreateUserForm = () => {
         type: showPassword ? "text" : "password",
         label: "Password",
         placeholder: "Enter alphanumeric password",
-        autoComplate: "new-password",
+        autoComplete: "new-password",
         icon: <img src={EyeSlashIcon} alt="ShowPassword" className="h-5 w-5" />,
         onIconClick: togglePasswordVisibility,
         required: true,

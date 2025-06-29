@@ -178,7 +178,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
                   onIconClick={field.onIconClick}
                   required={field.required}
                   error={fieldError}
-                  autoComplete={field.autoComplate}
+                  autoComplete={field.autoComplete}
                 />
               )}
             </div>
@@ -240,7 +240,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
         onIconClick={field.onIconClick}
         required={field.required}
         error={fieldError}
-        autoComplete={field.autoComplate}
+        autoComplete={field.autoComplete}
       />
     );
   };

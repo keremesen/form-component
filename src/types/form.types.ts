@@ -27,7 +27,7 @@ export interface FormField {
   label: string;
   placeholder?: string;
   required?: boolean;
-  autoComplate?: string;
+  autoComplete?: string;
   options?: Array<{ value: string; label: string }>; // select and radio
   multiple?: boolean; // file and select
   accept?: string; // file
