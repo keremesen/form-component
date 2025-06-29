@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../components/ui/Button";
+import { Button } from "../components/ui";
 import { User } from "../types";
+import Loading from "../components/Loading";
 
 const UserDetail: React.FC = () => {
   const navigate = useNavigate();
@@ -33,11 +34,7 @@ const UserDetail: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!userData) {

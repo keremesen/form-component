@@ -1,10 +1,11 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Input from "./ui/Input";
-import Button from "./ui/Button";
+import { Input } from "./ui/Input";
+import { Button } from "./ui/Button";
 import { FormGeneratorProps, FormField, ButtonConfig } from "../types";
 import { createValidationSchema } from "../utils/validations";
+import { Checkbox, Select, TextArea } from "./ui";
 
 /**
  * FormGenerator - A reusable form component that dynamically generates forms
@@ -46,8 +47,9 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
   mode = "uncontrolled",
   defaultValues = {},
   className = "",
+  validationSchema,
 }) => {
-  const validationSchema = createValidationSchema(config.fields);
+  const schema = validationSchema || createValidationSchema(config.fields);
 
   const {
     control,
@@ -57,7 +59,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
     register,
     getValues,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(schema),
     defaultValues,
     mode: "onSubmit",
   });
@@ -124,6 +126,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
   /**
    * Renders a single form field based on its configuration
    */
+
   const renderField = (field: FormField) => {
     const fieldError = errors[field.name]?.message as string;
 
@@ -137,57 +140,34 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
           render={({ field: controllerField }) => (
             <div>
               {field.type === "checkbox" ? (
-                <div className="flex items-center mb-4">
-                  <input
-                    {...controllerField}
-                    type="checkbox"
-                    id={field.name}
-                    checked={controllerField.value || false}
-                    onChange={(e) => controllerField.onChange(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor={field.name} className="ml-2 text-sm font-medium text-gray-700">
-                    {field.label}
-                    {field.required && <span className="text-red-500 ml-1">*</span>}
-                  </label>
-                </div>
+                <Checkbox
+                  name={field.name}
+                  label={field.label}
+                  required={field.required}
+                  error={fieldError}
+                  checked={controllerField.value || false}
+                  onChange={(checked) => controllerField.onChange(checked)}
+                />
               ) : field.type === "select" ? (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {field.label}
-                    {field.required && <span className="text-red-500 ml-1">*</span>}
-                  </label>
-                  <select
-                    {...controllerField}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      fieldError ? "border-red-500" : "border-gray-300"
-                    }`}
-                  >
-                    <option value="">Select {field.label}</option>
-                    {field.options?.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  {fieldError && <p className="mt-1 text-sm text-red-600">{fieldError}</p>}
-                </div>
+                <Select
+                  name={field.name}
+                  label={field.label}
+                  options={field.options}
+                  required={field.required}
+                  error={fieldError}
+                  value={controllerField.value}
+                  onChange={(value) => controllerField.onChange(value)}
+                />
               ) : field.type === "textarea" ? (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {field.label}
-                    {field.required && <span className="text-red-500 ml-1">*</span>}
-                  </label>
-                  <textarea
-                    {...controllerField}
-                    placeholder={field.placeholder}
-                    rows={4}
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      fieldError ? "border-red-500" : "border-gray-300"
-                    }`}
-                  />
-                  {fieldError && <p className="mt-1 text-sm text-red-600">{fieldError}</p>}
-                </div>
+                <TextArea
+                  name={field.name}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  required={field.required}
+                  error={fieldError}
+                  value={controllerField.value}
+                  onChange={(value) => controllerField.onChange(value)}
+                />
               ) : (
                 <Input
                   {...controllerField}
@@ -198,6 +178,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
                   onIconClick={field.onIconClick}
                   required={field.required}
                   error={fieldError}
+                  autoComplete={field.autoComplate}
                 />
               )}
             </div>
@@ -209,64 +190,42 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
     // Uncontrolled mode using register
     if (field.type === "checkbox") {
       return (
-        <div key={field.name} className="flex items-center mb-4">
-          <input
-            {...register(field.name)}
-            type="checkbox"
-            id={field.name}
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label htmlFor={field.name} className="ml-2 text-sm font-medium text-gray-700">
-            {field.label}
-            {field.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-          {fieldError && <p className="mt-1 text-sm text-red-600">{fieldError}</p>}
-        </div>
+        <Checkbox
+          key={field.name}
+          name={field.name}
+          label={field.label}
+          required={field.required}
+          error={fieldError}
+          register={register}
+        />
       );
     }
 
     if (field.type === "select") {
       return (
-        <div key={field.name} className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {field.label}
-            {field.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-          <select
-            {...register(field.name)}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              fieldError ? "border-red-500" : "border-gray-300"
-            }`}
-          >
-            <option value="">Select {field.label}</option>
-            {field.options?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {fieldError && <p className="mt-1 text-sm text-red-600">{fieldError}</p>}
-        </div>
+        <Select
+          key={field.name}
+          name={field.name}
+          label={field.label}
+          options={field.options}
+          required={field.required}
+          error={fieldError}
+          register={register}
+        />
       );
     }
 
     if (field.type === "textarea") {
       return (
-        <div key={field.name} className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            {field.label}
-            {field.required && <span className="text-red-500 ml-1">*</span>}
-          </label>
-          <textarea
-            {...register(field.name)}
-            placeholder={field.placeholder}
-            rows={4}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              fieldError ? "border-red-500" : "border-gray-300"
-            }`}
-          />
-          {fieldError && <p className="mt-1 text-sm text-red-600">{fieldError}</p>}
-        </div>
+        <TextArea
+          key={field.name}
+          name={field.name}
+          label={field.label}
+          placeholder={field.placeholder}
+          required={field.required}
+          error={fieldError}
+          register={register}
+        />
       );
     }
 
@@ -281,6 +240,7 @@ const FormGenerator: React.FC<FormGeneratorProps> = ({
         onIconClick={field.onIconClick}
         required={field.required}
         error={fieldError}
+        autoComplete={field.autoComplate}
       />
     );
   };

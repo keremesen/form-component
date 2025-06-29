@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { InputProps } from "../../types";
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       label,
@@ -41,7 +41,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="mb-4">
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor={props.name} className="block text-sm font-medium text-gray-700 mb-1">
             {label}
             {required && <span className="text-red-500 ml-1">*</span>}
           </label>
@@ -55,6 +55,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
 
           <input
+            id={props.name}
             ref={ref}
             className={inputClasses}
             aria-invalid={error ? "true" : "false"}
@@ -82,5 +83,3 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 );
 
 Input.displayName = "Input";
-
-export default Input;

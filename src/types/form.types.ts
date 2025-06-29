@@ -1,19 +1,47 @@
+import * as yup from "yup";
+export type InputType =
+  | "text"
+  | "email"
+  | "password"
+  | "number"
+  | "tel"
+  | "url"
+  | "search"
+  | "date"
+  | "datetime-local"
+  | "time"
+  | "month"
+  | "week"
+  | "color"
+  | "range"
+  | "file"
+  | "hidden"
+  | "checkbox"
+  | "radio"
+  | "select"
+  | "textarea";
+
 export interface FormField {
   name: string;
-  type: "text" | "email" | "password" | "checkbox" | "select" | "textarea";
+  type: InputType;
   label: string;
   placeholder?: string;
   required?: boolean;
-  options?: { value: string; label: string }[];
+  autoComplate?: string;
+  options?: Array<{ value: string; label: string }>; // select and radio
+  multiple?: boolean; // file and select
+  accept?: string; // file
+  step?: number | string; // number, range
   validation?: {
     pattern?: RegExp;
     message?: string;
+    min?: number | string; // string length, number value, or date
+    max?: number | string;
   };
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   onIconClick?: () => void;
 }
-
 export interface ButtonConfig {
   text?: string;
   variant?: "primary" | "secondary" | "outline" | "ghost";
@@ -46,4 +74,5 @@ export interface FormGeneratorProps {
   mode?: "controlled" | "uncontrolled";
   defaultValues?: Record<string, any>;
   className?: string;
+  validationSchema?: yup.ObjectSchema<any>;
 }

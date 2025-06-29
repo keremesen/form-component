@@ -1,4 +1,9 @@
+import { FormField } from "./form.types";
+
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  field?: FormField;
+  fieldProps?: any;
+  fieldError?: string;
   label?: string;
   error?: string;
   required?: boolean;

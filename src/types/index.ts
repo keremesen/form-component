@@ -1,3 +1,3 @@
-export * from './ui';
-export * from './form';
-export * from './user';
+export * from './ui.types';
+export * from './form.types';
+export * from './user.types';

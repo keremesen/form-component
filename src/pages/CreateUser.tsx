@@ -1,6 +1,7 @@
 import React from "react";
 import FormGenerator from "../components/FormGenerator";
 import { useCreateUserForm } from "../hooks/useCreateUserForm";
+import { userValidationSchema } from "../utils/validations";
 
 const CreateUser: React.FC = () => {
   const { formConfig } = useCreateUserForm();
@@ -25,6 +26,7 @@ const CreateUser: React.FC = () => {
               password: "",
               rememberMe: false,
             }}
+            validationSchema={userValidationSchema}
             className="space-y-6"
           />
         </div>
